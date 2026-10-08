@@ -30,7 +30,7 @@ module.exports = {
         await bot.sendChatAction(msg.chat.id, 'typing').catch(() => {});
 
         try {
-            const client = new OpenAI({ apiKey: key, baseURL: `${host.replace(/\/+$/, '')}/v1` });
+            const client = new OpenAI({ apiKey: key, baseURL: host });
 
             const link = await bot.getFileLink(audio.file_id);
             const download = await fetch(link);
@@ -48,7 +48,7 @@ module.exports = {
                 response_format: 'text',
             });
 
-            const text = result.trim();
+            const text = result.replace(/\n/g, ' ').trim();
 
             if (!text) throw new Error("No text in audio");
 
