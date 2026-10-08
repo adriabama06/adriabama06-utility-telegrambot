@@ -16,7 +16,7 @@ const bot = new TelegramBot(token, { polling: true });
 const cmds = new Map();
 const cmdsPath = path.join(__dirname, 'cmds');
 
-for (const file of fs.readdirSync(cmdsPath).filter(/** @param {string} f */ (f) => f.endsWith('.js'))) {
+for (const file of fs.readdirSync(cmdsPath).filter(f => f.endsWith('.js'))) {
     const cmd = require(path.join(cmdsPath, file));
     if (!cmd.name || typeof cmd.run !== 'function') {
         console.warn(`[WARN] cmds/${file} does not export { name, run() }, skipped.`);
@@ -42,7 +42,7 @@ if (fs.existsSync(eventsPath)) {
     }
 }
 
-bot.on('message', async (/** @type {import('./types').TelegramMessage} */ msg) => {
+bot.on('message', async (msg) => {
     for (const evt of events) {
         try {
             await evt.run(bot, msg);
@@ -76,4 +76,4 @@ bot.on('polling_error', (/** @type {any} */ err) => {
     console.error('[ERROR] polling:', err?.message ?? err);
 });
 
-console.log('🤖 Bot started, waiting for messages... (Ctrl+C to stop)');
+console.log('[INFO] Bot started, waiting for messages... (Ctrl+C to stop)');

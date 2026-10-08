@@ -19,7 +19,7 @@ module.exports = {
             /** @type {import('../types').BotCommand} */
             const cmd = require(path.join(cmdsPath, file));
             if (!cmd.name) continue;
-            lines.push(`/${cmd.name}${cmd.description ? ` — ${cmd.description}` : ''}`);
+            lines.push(`/${cmd.name} - ${cmd.description}`);
         }
 
         lines.sort();

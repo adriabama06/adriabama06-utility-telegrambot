@@ -1,3 +1,5 @@
+const { OpenAI, toFile } = require('openai');
+
 /** @type {import('../types').BotEvent} */
 module.exports = {
     name: 'stt',
@@ -12,6 +14,7 @@ module.exports = {
         if (!host || !key) {
             return;
         }
+        const model = process.env.STT_OPENAI_MODEL || 'whisper-1';
 
         const audio = msg.voice ?? msg.audio;
         if (!audio) {
@@ -27,34 +30,32 @@ module.exports = {
         await bot.sendChatAction(msg.chat.id, 'typing').catch(() => {});
 
         try {
+            const client = new OpenAI({ apiKey: key, baseURL: `${host.replace(/\/+$/, '')}/v1` });
+
             const link = await bot.getFileLink(audio.file_id);
             const download = await fetch(link);
-            if (!download.ok) {
-                throw new Error(`Audio download failed: ${download.status}`);
-            }
-            const buffer = Buffer.from(await download.arrayBuffer());
 
-            const form = new FormData();
-            form.append('model', 'whisper-1');
-            form.append('response_format', 'text');
+            if (!download.ok) throw new Error(`Audio download failed: ${download.status}`);
+
             const mime = audio.mime_type ?? 'audio/ogg';
-            form.append('file', new Blob([buffer], { type: mime }), `audio.${mime.split('/')[1] ?? 'oga'}`);
-
-            const transcription = await fetch(`${host.replace(/\/+$/, '')}/v1/audio/transcriptions`, {
-                method: 'POST',
-                headers: { Authorization: `Bearer ${key}` },
-                body: form,
+            const file = await toFile(Buffer.from(await download.arrayBuffer()), `audio.${mime.split('/')[1] ?? 'oga'}`, {
+                type: mime,
             });
-            if (!transcription.ok) {
-                throw new Error(`STT request failed: ${transcription.status}`);
-            }
-            const text = (await transcription.text()).trim();
-            if (!text) {
-                return;
-            }
+
+            const result = await client.audio.transcriptions.create({
+                file,
+                model,
+                response_format: 'text',
+            });
+
+            const text = result.trim();
+
+            if (!text) throw new Error("No text in audio");
+
             await bot.sendMessage(msg.chat.id, text, {
                 reply_to_message_id: msg.message_id,
             });
+
         } catch (err) {
             console.error('[ERROR] Event stt:', err instanceof Error ? err.message : err);
             await bot

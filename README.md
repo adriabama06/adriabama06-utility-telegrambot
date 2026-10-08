@@ -76,12 +76,13 @@ module.exports = {
 ## Transcripción de audio (STT)
 
 `events/stt.js` transcribe las notas de voz y audios adjuntos con `whisper-1`
-y responde con el texto. Solo necesita estas variables en `.env`
+usando el paquete oficial `openai` y responde con el texto. Solo necesita estas variables en `.env`
 (ver `.env.example`):
 
 ```bash
 STT_OPENAI_HOST=https://tu-api-openai-compatible
 STT_OPENAI_KEY=tu-clave
+STT_OPENAI_MODEL=whisper-1
 ```
 
 Sin audio adjunto o sin estas variables el evento se ignora.
