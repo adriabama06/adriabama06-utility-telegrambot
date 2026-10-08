@@ -1,0 +1,13 @@
+{
+    "compilerOptions": {
+        "target": "ES2022",
+        "module": "CommonJS",
+        "checkJs": true,
+        "strict": false,
+        "moduleResolution": "bundler",
+        "skipLibCheck": true,
+        "types": ["node"]
+    },
+    "include": ["index.js", "types.js", "cmds/**/*.js", "events/**/*.js"],
+    "exclude": ["node_modules"]
+}

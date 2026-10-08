@@ -1,0 +1,24 @@
+{
+    "name": "adriabama06-utility-telegrambot",
+    "version": "1.0.0",
+    "description": "Yeah, a utility bot via telegram <3",
+    "main": "index.js",
+    "license": "MIT",
+    "engines": {
+        "node": ">=20"
+    },
+    "scripts": {
+        "start": "node index.js",
+        "dev": "node --watch index.js",
+        "typecheck": "tsc --noEmit --allowJs --checkJs --skipLibCheck --target es2022 --module commonjs --moduleResolution bundler --types node index.js types.js cmds/help.js cmds/helloworld.js cmds/ping.js events/print.js events/stt.js"
+    },
+    "dependencies": {
+        "dotenv": "^16.4.5",
+        "node-telegram-bot-api": "^0.66.0"
+    },
+    "devDependencies": {
+        "@types/node": "^26.6.4",
+        "@types/node-telegram-bot-api": "^0.64.15",
+        "typescript": "^7.0.2"
+    }
+}

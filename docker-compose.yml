@@ -1,0 +1,7 @@
+services:
+    bot:
+        build: .
+        container_name: utility-telegrambot
+        env_file:
+            - .env
+        restart: unless-stopped
